@@ -6,12 +6,12 @@ module.exports = {
       const { fullname, username, password, confirmPassword, gender } = req.body;
 
       if(password !== confirmPassword){
-        return res.staus(400).json({error:'Passwords did not match'})
+        return res.status(400).json({error:'Passwords did not match'})
       }
       
       const user = await User.findOne({username});
       if(user){
-        return res.staus(400).json({error:'User already exists'});
+        return res.status(400).json({error:'User already exists'});
       }
 
       const profilePic = `https://avatar.iran.liara.run/public/${gender === 'male' ? 'boy' : 'girl'}?username=${username}`;
