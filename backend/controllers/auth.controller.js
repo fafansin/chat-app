@@ -1,9 +1,36 @@
+const User = require('../models/user.model.js');
+
 module.exports = {
   signup: async (req, res) => {
     try{
-      // const { fullname, username, password, confirmPassword, gender } = req.body;
-      console.log(req.body);
-      res.json({status:'success', data:req.body})
+      const { fullname, username, password, confirmPassword, gender } = req.body;
+
+      if(password !== confirmPassword){
+        return res.staus(400).json({error:'Passwords did not match'})
+      }
+      
+      const user = await User.findOne({username});
+      if(user){
+        return res.staus(400).json({error:'User already exists'});
+      }
+
+      const profilePic = `https://avatar.iran.liara.run/public/${gender === 'male' ? 'boy' : 'girl'}?username=${username}`;
+
+      const newUser = new User({
+        fullname,
+        username,
+        password,
+        gender,
+        profilePic
+      })
+
+      await newUser.save();
+      
+      res.status(201).json({
+        _id:newUser._id,
+        fullname:newUser,fullname
+      })
+      
     }catch(e){
       console.log(e, 'ERROR')
     }
