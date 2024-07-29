@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 module.exports = async() => {
   try {
-    console.log(process.env.MONGO_URI);
     await mongoose.connect(process.env.MONGO_URI, {dbName:'chat-app'});
     console.log('Connected to MONGO DB');
   } catch (error) {
