@@ -8,6 +8,9 @@ router.get('/signup', (req, res) => {
 router.get('/login', (req, res) => {
   res.send('Login Route')
 })
+router.get('/logout', (req, res) => {
+  res.send('Logout Route')
+})
 
 
 module.exports = router;
