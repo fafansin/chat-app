@@ -1,4 +1,5 @@
 const User = require('../models/user.model.js');
+const bcrypt = require('bcrypt');
 
 module.exports = {
   signup: async (req, res) => {
@@ -8,7 +9,7 @@ module.exports = {
       if(password !== confirmPassword){
         return res.status(400).json({error:'Passwords did not match'})
       }
-      
+
       const user = await User.findOne({username});
       if(user){
         return res.status(400).json({error:'User already exists'});
@@ -16,10 +17,13 @@ module.exports = {
 
       const profilePic = `https://avatar.iran.liara.run/public/${gender === 'male' ? 'boy' : 'girl'}?username=${username}`;
 
+      const salt = 10;
+      const hash = bcrypt.hashSync(password, salt);
+
       const newUser = new User({
         fullname,
         username,
-        password,
+        password:hash,
         gender,
         profilePic
       })
