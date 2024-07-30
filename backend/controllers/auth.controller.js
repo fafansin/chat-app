@@ -71,6 +71,12 @@ module.exports = {
     
   },
   logout: (req, res) => {
-    console.log('logout')
+    try{
+      res.cookie("jwt", "", {maxAge:0});
+      res.status(200).json({message:'Logged out successfully'});
+    }catch(e){
+      console.log('Error in login controller', e.message);
+      res.status(500).json({error:"Internal Server Error"})
+    }
   }
 }
