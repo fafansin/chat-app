@@ -1,5 +1,6 @@
 const User = require('../models/user.model.js');
 const bcrypt = require('bcrypt');
+const generateToken = require('../utils/generateToken.js')
 
 module.exports = {
   signup: async (req, res) => {
@@ -27,13 +28,18 @@ module.exports = {
         gender,
         profilePic
       })
-
-      await newUser.save();
+      if(newUser){
+        generateToken(newUser._id, res);
+        await newUser.save();
       
-      res.status(201).json({
-        _id:newUser._id,
-        fullname:newUser,fullname
-      })
+        res.status(201).json({
+          _id:newUser._id,
+          fullname:newUser,fullname
+        })
+      }else{
+        res.status(400).json({error:"Invalid user data"});
+      }
+
       
     }catch(e){
       console.log("Error in signup controller", e.message);
