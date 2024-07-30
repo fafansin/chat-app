@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = new mongoose.Model('Message', new mongoose.Schema({
+module.exports = new mongoose.model('Message', new mongoose.Schema({
   senderId:{
     type:mongoose.Schema.Types.ObjectId,
     ref: "User",
