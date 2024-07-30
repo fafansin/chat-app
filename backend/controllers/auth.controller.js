@@ -40,8 +40,17 @@ module.exports = {
       res.status(500).json({error:'Internal Server Error'});
     }
   },
-  login: (req, res) => {
-    res.json({status:'success', message:'login'})
+  login: async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.findOne({username});
+
+    if(!user) return res.json({message:'User not found'});
+    
+    if(bcrypt.compareSync(password, user.password)){
+      res.json({message:'User Logged in!'})
+    }else{
+      res.json({message:'Wrong Passowrd'})
+    }
   },
   logout: (req, res) => {
     console.log('logout')
