@@ -47,16 +47,28 @@ module.exports = {
     }
   },
   login: async (req, res) => {
-    const { username, password } = req.body;
-    const user = await User.findOne({username});
+    try{
+      const { username, password } = req.body;
+      const user = await User.findOne({username});
+      const isCorrect = await bcrypt.compare(password, user?.password || "");
 
-    if(!user) return res.json({message:'User not found'});
-    
-    if(bcrypt.compareSync(password, user.password)){
-      res.json({message:'User Logged in!'})
-    }else{
-      res.json({message:'Wrong Passowrd'})
+      if(!user || !isCorrect){
+        return res.status(400).json({error: "Invalid username or password"});
+      }
+
+      generateToken(user._id, res);
+
+      res.status(200).json({
+        _id:user._id,
+        fullname: user.fullname,
+        username: user.username,
+        profilePic: user.profilePic
+      })
+    }catch(e){
+      console.log('Error in login controller', e.message);
+      res.status(500).json({error:"Internal Server Error"})
     }
+    
   },
   logout: (req, res) => {
     console.log('logout')
