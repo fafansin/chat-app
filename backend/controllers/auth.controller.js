@@ -32,7 +32,8 @@ module.exports = {
       })
       
     }catch(e){
-      console.log(e, 'ERROR')
+      console.log("Error in signup controller", e.message);
+      res.status(500).json({error:'Internal Server Error'});
     }
   },
   login: (req, res) => {
